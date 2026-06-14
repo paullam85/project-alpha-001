@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://project-alpha-001.vercel.app/sitemap.xml
+Sitemap: https://paullam85.github.io/project-alpha-001/sitemap.xml
