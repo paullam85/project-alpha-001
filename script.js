@@ -1,4 +1,4 @@
-const FORMSPREE_ENDPOINT = "PASTE_FORMSPREE_ENDPOINT_HERE";
+const FORMSPREE_ENDPOINT = "https://formspree.io/f/mnjylbwy";
 
 const form = document.getElementById("roof-form");
 const resultCard = document.getElementById("result-card");
