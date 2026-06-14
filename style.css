@@ -1008,6 +1008,47 @@ input:focus-visible,
   grid-column: 1 / -1;
 }
 
+.modal-form .button:disabled {
+  cursor: not-allowed;
+  opacity: 0.72;
+  transform: none;
+}
+
+.privacy-note,
+.lead-message {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.privacy-note {
+  color: var(--muted);
+  text-align: center;
+}
+
+.lead-message {
+  min-height: 20px;
+  color: var(--muted);
+  text-align: center;
+}
+
+.lead-message--error {
+  color: var(--danger);
+}
+
+.lead-message--success {
+  color: var(--success);
+}
+
+.report-success {
+  padding: 12px 14px;
+  border: 1px solid rgba(29, 127, 85, 0.22);
+  border-radius: 8px;
+  background: rgba(29, 127, 85, 0.1);
+  color: var(--success);
+  font-weight: 800;
+}
+
 .modal .lead-proof {
   margin-top: 16px;
 }

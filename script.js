@@ -1,9 +1,13 @@
+const FORMSPREE_ENDPOINT = "PASTE_FORMSPREE_ENDPOINT_HERE";
+
 const form = document.getElementById("roof-form");
 const resultCard = document.getElementById("result-card");
 const unlockModal = document.getElementById("unlock-modal");
 const leadForm = document.getElementById("lead-form");
-const roofLeads = [];
 let latestEstimate = null;
+let isLeadSubmitting = false;
+let hasUnlockedReport = false;
+let hasWarnedDemoMode = false;
 
 const sizeAdjustments = {
   "1000": 0,
@@ -93,6 +97,27 @@ function formatCurrency(value) {
     currency: "USD",
     maximumFractionDigits: 0
   }).format(value);
+}
+
+function getEstimatedCostRange(estimate) {
+  return `${formatCurrency(estimate.low)} - ${formatCurrency(estimate.high)}`;
+}
+
+function isFormspreeConfigured() {
+  return (
+    FORMSPREE_ENDPOINT &&
+    FORMSPREE_ENDPOINT !== "PASTE_FORMSPREE_ENDPOINT_HERE" &&
+    FORMSPREE_ENDPOINT.startsWith("https://formspree.io/")
+  );
+}
+
+function warnIfDemoMode() {
+  if (!hasWarnedDemoMode) {
+    console.warn(
+      "Formspree endpoint is not configured. Demo mode is active: the report can unlock for testing, but leads are not saved."
+    );
+    hasWarnedDemoMode = true;
+  }
 }
 
 function getDecision(age, leaks) {
@@ -321,9 +346,15 @@ function renderPartialResult(estimate) {
 
 function renderFullReport(estimate, lead) {
   const reasoning = getReasoning(estimate);
+  const successMessage =
+    lead.storageStatus === "saved"
+      ? "Your report is ready."
+      : "Demo mode: report unlocked, but this lead was not saved.";
 
   resultCard.classList.remove("result-card--empty");
   resultCard.innerHTML = `
+    <div class="report-success">${successMessage}</div>
+
     <div class="ai-report-header">
       <div>
         <p class="eyebrow">Roof AI decision system</p>
@@ -371,7 +402,7 @@ function renderFullReport(estimate, lead) {
     <div class="estimate-topline">
       <div>
         <h3>Estimated Cost Range</h3>
-        <p class="estimate-range">${formatCurrency(estimate.low)} - ${formatCurrency(estimate.high)}</p>
+        <p class="estimate-range">${getEstimatedCostRange(estimate)}</p>
       </div>
       <span class="confidence">${estimate.confidence}% Confidence Score</span>
     </div>
@@ -412,24 +443,125 @@ function renderFullReport(estimate, lead) {
   });
 }
 
-function handleLeadSubmit(event) {
-  event.preventDefault();
+function getLeadMessageElement() {
+  return document.getElementById("lead-message");
+}
 
-  const leadForm = event.currentTarget;
-  const leadData = new FormData(leadForm);
-  const lead = {
+function setLeadMessage(message, type) {
+  const messageElement = getLeadMessageElement();
+
+  if (!messageElement) return;
+
+  messageElement.textContent = message;
+  messageElement.className = type ? `lead-message lead-message--${type}` : "lead-message";
+}
+
+function setLeadFormSubmitting(isSubmitting) {
+  const submitButton = leadForm.querySelector("button[type='submit']");
+  const inputs = leadForm.querySelectorAll("input");
+
+  submitButton.disabled = isSubmitting;
+  submitButton.textContent = isSubmitting ? "Sending..." : "Get My AI Roof Decision Report";
+  inputs.forEach((input) => {
+    input.disabled = isSubmitting;
+  });
+}
+
+function buildLeadPayload(leadData) {
+  const createdAt = new Date().toISOString();
+  const sourcePage =
+    window.location && window.location.href ? window.location.href : "local-preview";
+
+  return {
     email: leadData.get("email").trim(),
     zip: leadData.get("zip").trim(),
-    source: "roof-ai-decision-system",
-    createdAt: new Date().toISOString(),
-    estimate: latestEstimate
+    state: latestEstimate.state,
+    roofSize: latestEstimate.size === "3000" ? "3000+ sqft" : `${latestEstimate.size} sqft`,
+    roofAge: latestEstimate.age,
+    leaks: latestEstimate.leaks,
+    roofType: latestEstimate.roofType,
+    estimatedCostRange: getEstimatedCostRange(latestEstimate),
+    confidence: latestEstimate.confidence,
+    finalDecision: latestEstimate.decision.action,
+    riskLevel: latestEstimate.risk.label,
+    urgency: latestEstimate.urgency.label,
+    createdAt,
+    sourcePage
   };
+}
 
-  roofLeads.push(lead);
-  window.roofLeads = roofLeads;
+async function submitLeadToFormspree(payload) {
+  if (!isFormspreeConfigured()) {
+    warnIfDemoMode();
+    return {
+      storageStatus: "demo"
+    };
+  }
 
-  closeUnlockModal();
-  renderFullReport(latestEstimate, lead);
+  const response = await fetch(FORMSPREE_ENDPOINT, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(payload)
+  });
+
+  if (!response.ok) {
+    let errorMessage = "We could not submit your report request. Please try again.";
+
+    try {
+      const responseBody = await response.json();
+      if (responseBody.errors && responseBody.errors.length > 0) {
+        errorMessage = responseBody.errors.map((error) => error.message).join(" ");
+      }
+    } catch (error) {
+      errorMessage = "We could not submit your report request. Please try again.";
+    }
+
+    throw new Error(errorMessage);
+  }
+
+  return {
+    storageStatus: "saved"
+  };
+}
+
+async function handleLeadSubmit(event) {
+  event.preventDefault();
+
+  if (isLeadSubmitting || hasUnlockedReport) {
+    return;
+  }
+
+  if (!latestEstimate) {
+    setLeadMessage("Please complete the roof questions before requesting your report.", "error");
+    return;
+  }
+
+  const leadData = new FormData(event.currentTarget);
+  const leadPayload = buildLeadPayload(leadData);
+
+  isLeadSubmitting = true;
+  setLeadMessage("", "");
+  setLeadFormSubmitting(true);
+
+  try {
+    const submissionResult = await submitLeadToFormspree(leadPayload);
+    const lead = {
+      ...leadPayload,
+      storageStatus: submissionResult.storageStatus
+    };
+
+    hasUnlockedReport = true;
+    closeUnlockModal();
+    renderFullReport(latestEstimate, lead);
+  } catch (error) {
+    setLeadMessage(error.message || "We could not submit your report request. Please try again.", "error");
+  } finally {
+    isLeadSubmitting = false;
+    setLeadFormSubmitting(false);
+  }
 }
 
 form.addEventListener("submit", (event) => {
