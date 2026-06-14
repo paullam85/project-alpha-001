@@ -1,4 +1,5 @@
 const FORMSPREE_ENDPOINT = "https://formspree.io/f/mnjylbwy";
+const GA_MEASUREMENT_ID = "REPLACE_WITH_GA4_ID";
 
 const form = document.getElementById("roof-form");
 const resultCard = document.getElementById("result-card");
@@ -8,6 +9,7 @@ let latestEstimate = null;
 let isLeadSubmitting = false;
 let hasUnlockedReport = false;
 let hasWarnedDemoMode = false;
+let hasStartedEstimate = false;
 
 const sizeAdjustments = {
   "1000": 0,
@@ -118,6 +120,73 @@ function warnIfDemoMode() {
     );
     hasWarnedDemoMode = true;
   }
+}
+
+function isGaConfigured() {
+  return (
+    GA_MEASUREMENT_ID &&
+    GA_MEASUREMENT_ID !== "REPLACE_WITH_GA4_ID" &&
+    GA_MEASUREMENT_ID.startsWith("G-")
+  );
+}
+
+function initializeAnalytics() {
+  if (!isGaConfigured()) {
+    console.warn("GA4 Measurement ID is not configured. Analytics events are disabled.");
+    return;
+  }
+
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = function gtag() {
+    window.dataLayer.push(arguments);
+  };
+
+  const script = document.createElement("script");
+  script.async = true;
+  script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`;
+  document.head.appendChild(script);
+
+  window.gtag("js", new Date());
+  window.gtag("config", GA_MEASUREMENT_ID);
+}
+
+function trackEvent(eventName, params = {}) {
+  if (typeof window.gtag === "function") {
+    window.gtag("event", eventName, params);
+  }
+}
+
+function trackCtaClick(ctaText, ctaLocation) {
+  trackEvent("cta_click", {
+    cta_text: ctaText,
+    cta_location: ctaLocation
+  });
+}
+
+function setupAnalyticsEventListeners() {
+  const heroPrimaryCta = document.querySelector(".hero__actions .button--primary");
+  const heroSecondaryCta = document.querySelector(".hero__actions .button--secondary");
+
+  if (heroPrimaryCta) {
+    heroPrimaryCta.addEventListener("click", () => {
+      trackCtaClick(heroPrimaryCta.textContent.trim(), "hero_primary");
+    });
+  }
+
+  if (heroSecondaryCta) {
+    heroSecondaryCta.addEventListener("click", () => {
+      trackCtaClick(heroSecondaryCta.textContent.trim(), "hero_secondary");
+    });
+  }
+
+  form.addEventListener("input", () => {
+    if (hasStartedEstimate) return;
+
+    hasStartedEstimate = true;
+    trackEvent("estimate_started", {
+      form_name: "roof_estimate_form"
+    });
+  });
 }
 
 function getDecision(age, leaks) {
@@ -274,6 +343,9 @@ function calculateEstimate(formData) {
 
 function openUnlockModal() {
   if (!latestEstimate) return;
+  trackEvent("lead_modal_opened", {
+    modal_name: "ai_roof_decision_report"
+  });
   unlockModal.classList.add("is-open");
   unlockModal.setAttribute("aria-hidden", "false");
   document.body.classList.add("modal-open");
@@ -338,8 +410,14 @@ function renderPartialResult(estimate) {
     </div>
   `;
 
-  document.getElementById("open-unlock-modal").addEventListener("click", openUnlockModal);
-  document.getElementById("unlock-quotes").addEventListener("click", openUnlockModal);
+  document.getElementById("open-unlock-modal").addEventListener("click", () => {
+    trackCtaClick("Get My AI Roof Decision Report", "partial_report");
+    openUnlockModal();
+  });
+  document.getElementById("unlock-quotes").addEventListener("click", () => {
+    trackCtaClick("Unlock Contractor Quotes", "partial_report");
+    openUnlockModal();
+  });
 
   resultCard.scrollIntoView({ behavior: "smooth", block: "start" });
 }
@@ -439,6 +517,7 @@ function renderFullReport(estimate, lead) {
   `;
 
   document.getElementById("full-report-button").addEventListener("click", () => {
+    trackCtaClick("Unlock Contractor Quotes", "full_report");
     alert("Contractor quote placeholder: connect this CTA to CRM sync, quote routing, or a contractor marketplace.");
   });
 }
@@ -545,6 +624,9 @@ async function handleLeadSubmit(event) {
   isLeadSubmitting = true;
   setLeadMessage("", "");
   setLeadFormSubmitting(true);
+  trackEvent("lead_form_submitted", {
+    form_name: "lead_capture"
+  });
 
   try {
     const submissionResult = await submitLeadToFormspree(leadPayload);
@@ -554,9 +636,18 @@ async function handleLeadSubmit(event) {
     };
 
     hasUnlockedReport = true;
+    trackEvent("lead_submission_success", {
+      final_decision: latestEstimate.decision.action,
+      risk_level: latestEstimate.risk.label,
+      urgency: latestEstimate.urgency.label,
+      confidence: latestEstimate.confidence
+    });
     closeUnlockModal();
     renderFullReport(latestEstimate, lead);
   } catch (error) {
+    trackEvent("lead_submission_error", {
+      error_type: "formspree_error"
+    });
     setLeadMessage(error.message || "We could not submit your report request. Please try again.", "error");
   } finally {
     isLeadSubmitting = false;
@@ -567,6 +658,13 @@ async function handleLeadSubmit(event) {
 form.addEventListener("submit", (event) => {
   event.preventDefault();
   latestEstimate = calculateEstimate(new FormData(form));
+  trackEvent("estimate_submitted", {
+    state: latestEstimate.state,
+    roof_size: latestEstimate.size,
+    roof_age: latestEstimate.age,
+    leaks: latestEstimate.leaks,
+    roof_type: latestEstimate.roofType
+  });
   renderPartialResult(latestEstimate);
 });
 
@@ -583,3 +681,6 @@ document.addEventListener("keydown", (event) => {
     closeUnlockModal();
   }
 });
+
+initializeAnalytics();
+setupAnalyticsEventListeners();
