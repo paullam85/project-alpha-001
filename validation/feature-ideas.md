@@ -1,4 +1,4 @@
-# Roof AI Feature Ideas
+﻿# Roof AI Feature Ideas
 
 ## Day 1 Summary
 
@@ -27,6 +27,12 @@ User-provided numbering retained for traceability, even where earlier seed IDs a
 | Feature Idea #006 | Insurance Claim Risk Analyzer | Help homeowners understand possible premium, cancellation, deductible, and claim-timing risks before filing. | Insight #010, Pain Point #010 | Very High |
 | Feature Idea #007 | Roof Recommendation Confidence Score | Score how trustworthy or well-supported a replacement recommendation is based on inspection evidence, contractor incentives, and second opinions. | Insight #011, Insight #012, Pain Point #011 | Very High |
 | Feature Idea #008 | Replace vs Claim Decision Matrix | Help homeowners compare out-of-pocket replacement, repair, monitoring, independent inspection, and insurance claim paths. | Insight #010, Insight #011, Insight #012 | Very High |
+| Feature Idea #009 | Attic Heat Analyzer | Help homeowners decide whether attic temperature is normal, risky, or likely caused by ventilation problems. | Insight #013, Pain Point #012 | High |
+| Feature Idea #010 | Attic Health Score | Score attic comfort and roof-system risk using intake, exhaust, baffles, radiant barrier, and fan context. | Insight #013, Insight #014, Pain Point #013 | High |
+| Feature Idea #011 | Ventilation Diagnostic Engine | Diagnose whether ridge, soffit, baffles, radiant barrier, or attic fan changes are likely to help. | Insight #014, Insight #015, Pain Point #013 | Very High |
+| Feature Idea #012 | Ventilation Score | Convert intake/exhaust configuration into a simple homeowner-readable score. | Insight #014, Pain Point #014 | High |
+| Feature Idea #013 | Airflow Score | Evaluate airflow quality rather than vent count alone. | Insight #014, Pain Point #014 | High |
+| Feature Idea #014 | Improvement Planner | Prioritize attic comfort improvements by likely impact, complexity, and uncertainty. | Pain Point #014 | High |
 
 ## Feature Scoring Framework
 

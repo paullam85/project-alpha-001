@@ -1,4 +1,4 @@
-# Roof AI Pain Points
+﻿# Roof AI Pain Points
 
 ## Day 1 Summary
 
@@ -18,6 +18,9 @@ Homeowners are not only looking for a price. They are trying to reduce uncertain
 | Pain Point #008 | Homeowners struggle to understand whether roof age, weather risk, and future storms justify immediate replacement or continued monitoring. | Decision Uncertainty | "15 year old roof isn't old." / "A 15 year old roof should still have plenty of life left." / "Is your roof leaking?" | Reddit - r/Homeowners | Very High | Roof Remaining Life Estimator |
 | Pain Point #010 | Homeowners are uncertain whether filing an insurance claim will help, increase premiums, or create cancellation/non-renewal risk. | Insurance Risk | "Your insurance may drop you." / "Your premiums could go up." | Reddit - insurance inspection thread | Very High | Insurance Claim Risk Analyzer |
 | Pain Point #011 | Homeowners distrust roofing contractors when replacement recommendations are tied to insurance claim payouts. | Trust | "They are storm chasers." / "They just want the insurance money." | Reddit - insurance inspection thread | Very High | Roof Recommendation Confidence Score |
+| Pain Point #012 | Homeowners misdiagnose normal attic heat as a roof or ventilation failure. | Attic Heat | 140 F attic temperatures are often normal. | Reddit - CASE-001 | High | Attic Heat Analyzer |
+| Pain Point #013 | Homeowners do not know whether intake, exhaust, baffles, radiant barriers, or fans are the right fix. | Ventilation Confusion | Ridge + Soffit is the dominant recommended configuration; baffles are frequently overlooked; attic fans remain controversial. | Reddit - CASE-001 / CASE-002 | Very High | Ventilation Diagnostic Engine |
+| Pain Point #014 | Homeowners need help prioritizing airflow improvements before spending money. | Ventilation & Airflow | Airflow matters more than vent count. | Reddit - CASE-002 | High | Improvement Planner |
 
 ## Append New Pain Points
 
