@@ -1,0 +1,4 @@
+﻿# Add one manually selected Reddit post URL per line.
+# The extractor will not crawl, search, or process subreddit feeds.
+# Example:
+# https://www.reddit.com/r/homeowners/comments/xxxxx/example_post_title/
