@@ -1,0 +1,144 @@
+﻿{
+  "project": "Roof AI Decision System",
+  "version": "1.0",
+  "lastUpdated": "2026-06-16",
+  "cases": {
+    "CASE-003": {
+      "source": {
+        "platform": "Reddit",
+        "subreddit": "r/homeowners",
+        "threadTitle": "What do you wish you had known when you replaced your roof?",
+        "sourceType": "manual_customer_discovery_synthesis"
+      },
+      "theme": "Roof Replacement Regrets",
+      "validationSignal": "Green",
+      "priority": "A",
+      "summary": "Homeowners often regret not validating ventilation, decking, bathroom venting, permits, insurance, documentation, materials, cleanup, solar readiness, and project scope before roof replacement.",
+      "categories": [
+        {
+          "name": "Ventilation",
+          "userPainPoint": "A new roof may not solve attic heat, moisture, or airflow issues.",
+          "rootCause": "Ventilation details are often underspecified in roof quotes.",
+          "recommendedAction": "Review ridge vents, soffit intake, baffles, attic air sealing, and climate needs before signing.",
+          "roofAiOpportunity": "Ventilation Readiness Check"
+        },
+        {
+          "name": "Decking / OSB",
+          "userPainPoint": "Hidden decking replacement can create unexpected cost increases.",
+          "rootCause": "Decking condition is not fully visible until tear-off.",
+          "recommendedAction": "Ask for per-sheet pricing, photo proof, and approval process.",
+          "roofAiOpportunity": "Decking Risk Estimate and Quote Clause Checker"
+        },
+        {
+          "name": "Bathroom Venting",
+          "userPainPoint": "Bathroom fans may vent into the attic or need correct roof routing.",
+          "rootCause": "Exhaust routing can be outside the roofing scope unless explicitly checked.",
+          "recommendedAction": "Verify fans vent outdoors and ask whether new roof penetrations or flashing are needed.",
+          "roofAiOpportunity": "Bathroom Vent Routing Checklist"
+        },
+        {
+          "name": "Permit",
+          "userPainPoint": "Homeowners may not know whether permits are required or handled.",
+          "rootCause": "Permit rules vary locally and contractor responsibility may be unclear.",
+          "recommendedAction": "Confirm permit requirements, who pulls the permit, and inspection sign-off.",
+          "roofAiOpportunity": "Permit Responsibility Prompt"
+        },
+        {
+          "name": "Insurance",
+          "userPainPoint": "Insurance claims can create uncertainty around deductibles, premiums, and documentation.",
+          "rootCause": "Insurance decisions mix contractor incentives, policy risk, and storm damage evidence.",
+          "recommendedAction": "Document damage, understand claim risk, and consider independent inspection.",
+          "roofAiOpportunity": "Insurance Claim Risk Analyzer"
+        },
+        {
+          "name": "Documentation",
+          "userPainPoint": "Homeowners may lack photos, warranties, permits, invoices, and product records after work.",
+          "rootCause": "Documentation is not always requested before project closeout.",
+          "recommendedAction": "Request before/during/after photos, warranty docs, permit records, specs, and final invoice.",
+          "roofAiOpportunity": "Roof Replacement Document Vault Checklist"
+        },
+        {
+          "name": "Material Selection",
+          "userPainPoint": "Homeowners may not understand differences in shingles, underlayment, flashing, and warranties.",
+          "rootCause": "Quotes often emphasize price instead of system components.",
+          "recommendedAction": "Compare material specs line by line.",
+          "roofAiOpportunity": "Material Comparison Matrix"
+        },
+        {
+          "name": "Shingle Color",
+          "userPainPoint": "Color can look different on a full roof than on a small sample.",
+          "rootCause": "Small samples and online photos do not reflect roof-scale appearance or heat impact.",
+          "recommendedAction": "View installed examples, check HOA rules, and consider climate effects.",
+          "roofAiOpportunity": "Shingle Color Decision Guide"
+        },
+        {
+          "name": "Metal Roof",
+          "userPainPoint": "Metal roof decisions introduce cost, noise, weight, expansion, and installer-skill concerns.",
+          "rootCause": "Metal roofing has different installation requirements than asphalt.",
+          "recommendedAction": "Verify installer experience, panel type, underlayment, fastening, warranty, and structure fit.",
+          "roofAiOpportunity": "Metal Roof Suitability Module"
+        },
+        {
+          "name": "Cleanup",
+          "userPainPoint": "Homeowners may be left with nails, debris, or property damage.",
+          "rootCause": "Cleanup expectations may not be written into the contract.",
+          "recommendedAction": "Require magnetic nail sweep, property protection, debris removal, and final walkthrough.",
+          "roofAiOpportunity": "Cleanup Scope Checklist"
+        },
+        {
+          "name": "Solar Readiness",
+          "userPainPoint": "Roof replacement may need to be coordinated with future solar plans.",
+          "rootCause": "Solar and roofing decisions are often planned separately.",
+          "recommendedAction": "Decide solar timing before roof work and ask about mounting, conduit, warranty, and roof life.",
+          "roofAiOpportunity": "Solar Readiness Check"
+        },
+        {
+          "name": "Scope Validation",
+          "userPainPoint": "Homeowners may not know exactly what is included or excluded in the roof quote.",
+          "rootCause": "Quotes can hide major differences behind similar total prices.",
+          "recommendedAction": "Get written scope and compare line items before deposit.",
+          "roofAiOpportunity": "Quote Scope Validation Engine"
+        }
+      ],
+      "top25HomeownerRegrets": [
+        "Not checking attic ventilation before replacing shingles.",
+        "Not asking whether soffit intake and ridge exhaust are balanced.",
+        "Not confirming whether baffles are installed or blocked.",
+        "Not asking for per-sheet decking or OSB replacement pricing.",
+        "Not getting photo proof before approving decking add-ons.",
+        "Not verifying bathroom fans vent outdoors instead of into the attic.",
+        "Not clarifying who handles permits and inspections.",
+        "Not understanding insurance claim consequences before filing.",
+        "Not documenting roof condition before the contractor starts.",
+        "Not saving warranty, permit, invoice, and product records.",
+        "Not comparing underlayment, flashing, drip edge, and ventilation components.",
+        "Not comparing quotes line by line beyond the total price.",
+        "Not seeing shingle colors on real homes before choosing.",
+        "Not considering heat and climate impact of darker shingles.",
+        "Not validating whether metal roofing is appropriate for the home.",
+        "Not checking whether the contractor has real experience with the selected material.",
+        "Not requiring written cleanup expectations.",
+        "Not protecting landscaping, gutters, decks, and driveways during work.",
+        "Not requiring magnetic nail cleanup and a final walkthrough.",
+        "Not planning roof replacement around future solar installation.",
+        "Not asking whether new roof work could affect solar mounting or warranty.",
+        "Not clarifying what happens if hidden damage is found.",
+        "Not confirming whether flashing, pipe boots, vents, and valleys are replaced or reused.",
+        "Not understanding labor, material, workmanship, and manufacturer warranty differences.",
+        "Not getting the complete project scope in writing before deposit."
+      ],
+      "suggestedModules": [
+        "Roof Replacement Readiness Score",
+        "Quote Scope Validation Engine",
+        "Ventilation Readiness Check",
+        "Decking Risk Estimate",
+        "Bathroom Vent Routing Checklist",
+        "Insurance Claim Risk Analyzer",
+        "Material Comparison Matrix",
+        "Cleanup Scope Checklist",
+        "Solar Readiness Check",
+        "Documentation Checklist"
+      ]
+    }
+  }
+}
